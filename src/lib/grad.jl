@@ -17,20 +17,23 @@ macro nograd(ex)
 end
 
 """
-    nograd(x)
+    nograd(f)
 
-Treats `x` as a constant. For example:
+Calls `f()`, without accumulating gradients. For example:
 
 ```julia-repl
-julia> f(x) = sum(nograd(x) + x); gradient(f, randn(5))
-([1.0, 1.0, 1.0, 1.0, 1.0],)
+julia> using Zygote; using Zygote: nograd
+julia> f(x) = (A = zero(x); nograd(_ -> (A .= x)); sum(A + x))
+julia> x = randn(3); f(x) == sum(2x)
+true
+julia> f'(x)
+[1.0, 1.0, 1.0]
 ```
 
 In the example above, the gradient is an array of ones even though
-`f(x)` computes `sum(2x)`, because `nograd(x)` uses the value of `x`
-as if it were a constant.
+`f(x)` is computing `sum(2x)`.
 """
-nograd(x) = x
+nograd(f) = f()
 @nograd nograd
 
 macro which(ex)
