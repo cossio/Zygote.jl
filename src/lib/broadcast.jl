@@ -254,7 +254,8 @@ using ForwardDiff: Dual, Partials, value, partials
 # We do this because it ensures type stability so it compiles nicely on the gpu
 # The val is needed for some type stability
 @inline dual(x, i, ::Val{N}, ::Val{C}) where {N,C} = x
-@inline dual(x::Bool, i, ::Val{N}, ::Val{C}) where {N,C} = x
+@inline dual(x::Bool, i, ::Val{N}, ::Val{false}) where {N} = x
+@inline dual(x::Bool, i, ::Val{N}, ::Val{true}) where {N} = x
 @inline dual(x::Real, i, ::Val{N}, ::Val{false}) where {N} = Dual(x, ntuple(==(i), N))
 @inline dual(x::Real, i, ::Val{N}, ::Val{true}) where {N} = Dual(x, ntuple(==(i), 2N))
 # For complex since ForwardDiff.jl doesn't play nicely with complex numbers we
