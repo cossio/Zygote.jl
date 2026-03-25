@@ -24,6 +24,7 @@ zerolike(x::GlobalRef) = nothing
 @tangent isa(a, b) = isa(a, b), (_, _) -> false
 @tangent repr(x) = repr(x), _ -> nothing
 @tangent println(x...) = println(x...), (_...) -> nothing
+@tangent getglobal(args...) = getglobal(args...), (_...) -> nothing
 @tangent typeassert(x, T) = typeassert(x, T), (ẋ, _) -> ẋ
 @tangent fieldnames(T) = fieldnames(T), _ -> zerolike(fieldnames(T))
 @tangent eltype(x) = eltype(x), ẋ -> zerolike(eltype(ẋ))
