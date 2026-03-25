@@ -121,4 +121,11 @@ end
     @test Zygote.hessian(fun, collect(1:9)) ≈ [14 0 0 0 0 0 2 0 0; 0 16 0 0 0 0 0 4 0; 0 0 18 0 0 0 0 0 6; 0 0 0 14 0 0 8 0 0; 0 0 0 0 16 0 0 10 0; 0 0 0 0 0 18 0 0 12; 2 0 0 8 0 0 0 0 0; 0 4 0 0 10 0 0 0 0; 0 0 6 0 0 12 0 0 0]
 end
 
+@testset "issue #1601" begin
+    cpx(l, x) = real(l) + x
+    f(x) = sum(@. real(cpx(im + x, x)))
+
+    @test Zygote.gradient(f, ones(10))[1] == fill(2.0, 10)
+end
+
 end
